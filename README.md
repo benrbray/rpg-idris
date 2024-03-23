@@ -10,7 +10,6 @@
 
 The `justfile` contains a `build` command which compiles the Idris source to JavaScript and collects the relevant output files in the `dist` folder.
 
-
 ```
 just build
 ```

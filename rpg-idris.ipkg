@@ -11,5 +11,7 @@ opts       = "--codegen javascript"
 
 main       = Rpg.Main
 executable = "rpg.js"
+modules    = Rpg.Model
+           , Example.Crash
 
 sourcedir  = "src"

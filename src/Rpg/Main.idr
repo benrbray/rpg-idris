@@ -12,19 +12,8 @@ import Web.MVC
 ||| ID of the `<body>` element. The page content will
 ||| be placed here.
 export
-contentDiv : Ref Tag.Body
-contentDiv = Id "content"
-
-||| The page consists of a static heading with a title an
-||| (eventually) a short description of the project.
-||| This is followed by a selection box, where visitors can
-||| choose an example application.
-|||
-||| The example application will be dynamicall generated and
-||| placed in to a `<div>` with ID `"example"`.
-export
-exampleDiv : Ref Div
-exampleDiv = Id "example"
+appDiv : Ref Tag.Body
+appDiv = Id "app"
 
 ||| ID of a `<style>` element in the page header.
 ||| The generated CSS rules will go here.
@@ -55,12 +44,22 @@ update Init = id
 --     [ class ("content"), Id contentDiv ]
 --     [ label [] [Text "content"] ]
 
+content : Node Event
+content = 
+  div
+    [ class "content" ]
+    [ Text "hello, world!" ]
+
 display : Event -> ST -> Cmd Event
-display Init s = child contentDiv (Text "hello, world!")
+display Init s = child appDiv content
+
+------------------------------------------------------------
 
 covering
 ui : IO ()
 ui = runMVC update display (putStrLn . dispErr) Init init
+
+------------------------------------------------------------
 
 covering
 main : IO ()
