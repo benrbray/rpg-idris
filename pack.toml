@@ -1,0 +1,28 @@
+[custom.all.rpg-idris]
+type = "local"
+path = "."
+ipkg = "rpg-idris.ipkg"
+test = "test/test.ipkg"
+
+[custom.all.rpg-idris-test]
+type = "local"
+path = "test"
+ipkg = "test.ipkg"
+
+[custom.all.dom-mvc]
+type   = "git"
+url    = "https://github.com/stefan-hoeck/idris2-dom-mvc"
+commit = "c6451331cb91c9aab98d655e212a7a20d522b103"
+ipkg   = "dom-mvc.ipkg"
+
+[custom.all.dom-mvc-extra]
+type   = "git"
+url    = "https://github.com/stefan-hoeck/idris2-dom-mvc"
+commit = "c6451331cb91c9aab98d655e212a7a20d522b103"
+ipkg   = "extra/dom-mvc-extra.ipkg"
+
+[custom.all.tailrec]
+type   = "git"
+url    = "https://github.com/stefan-hoeck/idris2-tailrec"
+commit = "latest:main"
+ipkg   = "tailrec.ipkg"

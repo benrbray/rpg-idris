@@ -1,0 +1,15 @@
+package rpg
+version    = 0.0.1
+authors    = "Benjamin R. Bray"
+depends    = dom-mvc
+           , contrib
+           , finite
+           , monocle
+           , rio
+
+opts       = "--codegen javascript"
+
+main       = Rpg.Main
+executable = "rpg.js"
+
+sourcedir  = "src"
