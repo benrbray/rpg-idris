@@ -112,8 +112,84 @@ filter p (x :: xs) =
 
 record Person where
   constructor MkPerson
-  firstName, middleName, lastName : String
+  firstName, lastName : String
   age : Int
 
-benjamin : Person
-benjamin = MkPerson "Benjamin" "Russell" "Bray" 28
+johnSmith : Person
+johnSmith = MkPerson "Benjamin" "Bray" 28
+
+johnMulaney : Person
+johnMulaney = { lastName := "Mulaney", age $= (+11) } johnSmith
+
+-- record parameters
+record Prod a b where
+  constructor Times
+  fst : a
+  snd : b
+
+-- dependent record
+
+record DPair a (p : a -> Type) where
+  constructor MkDPair
+  fst : a
+  snd : p fst
+
+cons : t -> (x : Nat ** Vect x t) -> (x : Nat ** Vect x t)
+cons val xs =
+  { fst := S (fst xs)
+  , snd := (val :: snd xs) } xs
+
+---- idiom brackets ----------------------------------------
+
+m_app : Maybe (a -> b) -> Maybe a -> Maybe b
+m_app (Just f) (Just a) = Just (f a)
+m_app _        _        = Nothing
+
+m_add : Maybe Int -> Maybe Int -> Maybe Int
+m_add x y = m_app (m_app (Just (+)) x) y
+
+-- equivalent to m_add2 but uses the Applicative Maybe instance
+m_add2 : Maybe Int -> Maybe Int -> Maybe Int
+m_add2 x y = [| x + y |]
+-- m_add2 x y = pure (+) <*> x <*> y
+
+data Expr
+  = Var String
+  | Val Int
+  | Add Expr Expr
+
+-- wrapping the evaluator in a datatype means we can provide
+-- implementations of interfaces (Functor, Applicative) for it later
+data Eval : Type -> Type where
+  MkEval : (List (String, Int) -> Maybe a) -> Eval a
+
+fetch : String -> Eval Int
+fetch x = MkEval fetchVal
+  where
+    fetchVal : List (String, Int) -> Maybe Int
+    fetchVal [] = Nothing
+    fetchVal ((v,val) :: xs) =
+      if (x == v)
+        then (Just val)
+        else (fetchVal xs)
+
+Functor Eval where
+  map f (MkEval g) = MkEval (\e => map f (g e))
+
+Applicative Eval where
+  pure x = MkEval (\e => Just x)
+
+  (<*>) (MkEval f) (MkEval g) = MkEval (\x => app (f x) (g x))
+    where
+      app : Maybe (a -> b) -> Maybe a -> Maybe b
+      app (Just fx) (Just gx) = Just (fx gx)
+      app _         _         = Nothing
+
+eval : Expr -> Eval Int
+eval (Var x) = fetch x
+eval (Val x) = [| x |]
+eval (Add x y) = [| eval x + eval y |]
+
+runEval : List (String, Int) -> Expr -> Maybe Int
+runEval env e = case eval e of
+  MkEval envFn => envFn env

@@ -4,6 +4,9 @@ import Text.HTML
 import Text.HTML.Select
 import Web.MVC
 
+import Example.BuildSystems
+import Data.String
+
 %default total
 %language ElabReflection
 
@@ -44,12 +47,16 @@ update Init = id
 --     [ class ("content"), Id contentDiv ]
 --     [ label [] [Text "content"] ]
 
+covering
 content : Node Event
 content = 
   div
     [ class "content" ]
-    [ Text "hello, world!" ]
+    [ Text result ]
+  where
+    result = unlines runExample
 
+covering
 display : Event -> ST -> Cmd Event
 display Init s = child appDiv content
 

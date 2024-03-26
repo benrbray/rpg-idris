@@ -13,5 +13,6 @@ main       = Rpg.Main
 executable = "rpg.js"
 modules    = Rpg.Model
            , Example.Crash
+           , Example.BuildSystems
 
 sourcedir  = "src"
